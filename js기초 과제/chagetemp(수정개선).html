@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온도 변환</title>
+</head>
+<body>
+    <h3>섭씨온도를 화씨온도로 변환</h3>
+    <form>
+        섭씨 온도: <input type="number" id="celsiusInput" />
+        <button type="button" onclick="change()">변환</button>
+    </form>
+    <p id="result"></p>
+    <table border="3">
+        <tr>
+            <th>섭씨온도</th>
+            <th>화씨온도</th>
+        </tr>
+        <script>
+            function change() {
+                let celsius = document.getElementById('celsiusInput').value;
+                if (celsius === '') {
+                    document.getElementById('result').textContent = '섭씨 온도를 입력하세요.';
+                    return;
+                }
+                let fahrenheit = (celsius * 9 / 5) + 32;
+                document.getElementById('result').textContent = `섭씨 ${celsius}도는 화씨 ${fahrenheit.toFixed(2)}도입니다.`;
+            }
+
+            for (let i = 0; i < 10; i++) {
+                let celsius = i;
+                let fahrenheit = (celsius * 9 / 5) + 32;
+                document.write("<tr><td>" + celsius + "</td><td>" + fahrenheit.toFixed(2) + "</td></tr>");
+            }
+        </script>
+    </table>
+</body>
+</html>

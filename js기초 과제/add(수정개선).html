@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        function calc() {
+            let x = document.getElementById('x').value;
+            let y = document.getElementById('y').value;
+            let sum = Number(x) + Number(y);
+            document.getElementById('sum').value = sum;
+            let cha = Number(x) - Number(y);
+            document.getElementById('cha').value = cha;
+        }
+    </script>
+    <title>덧셈 계산기</title>
+</head>
+<body>
+    <h3>덧셈 계산기</h3>
+    <form name="myform" method="POST">
+        첫번째 정수: <input id="x" type="number"/><br/>
+        두번째 정수: <input id="y" type="number"/><br/>
+        합계: <input id="sum" type="number" readonly/><br/>
+        빼기: <input id="cha" type="number" readonly/><br />
+        <input type="button" value="계산" onclick="calc();" />
+    </form>
+</body>
+</html>
