@@ -3,16 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Guessing Game</title>
+    <style>
+        .hint {
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        const answer = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+
+        function startGuessingGame() {
+            let guess = parseInt(document.getElementById('userInput').value);
+
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                alert("잘못된 입력입니다. 1부터 100 사이의 정수를 입력하세요.");
+                return;
+            }
+            attempts++;
+            let hint;
+            if (guess < answer) {
+                hint = "입력한 정수가 너무 낮습니다.";
+            } else if (guess > answer) {
+                hint = "입력한 정수가 너무 높습니다.";
+            } else {
+                hint = `축하합니다! 정답을 맞혔습니다. 정답은 ${answer}입니다.`;
+                attempts = 0; 
+                resetInput();
+            }
+
+            document.getElementById('attempts').innerText = `시도 횟수: ${attempts}`;
+            document.getElementById('result').innerText = `마지막 시도: ${guess} (${hint})`;
+        }
+        function resetInput() {
+            document.getElementById('userInput').value = '';
+        }
+    </script>
 </head>
 <body>
-    <h1>숫자 맞추기 게임</h1>
-    <p>이 게임은 컴퓨터가 생성한 숫자를 맞추는 게임입니다. 숫자는 1부터 100 사이에 있습니다.</p>
-    <div>숫자: <input type="text " id="number">
-    </div>
-    <script>
-        let num = document.getElementById('number').value;
-        document.write("")
-    </script>
+    <h1>Guessing Game</h1>
+    <p>1부터 100 사이의 정수를 맞춰보세요:</p>
+    <input type="number" id="userInput" placeholder="정수 입력">
+    <button onclick="startGuessingGame()">제출</button>
+    <p id="attempts">시도 횟수: 0</p>
+    <p id="result">마지막 시도:</p>
 </body>
 </html>
