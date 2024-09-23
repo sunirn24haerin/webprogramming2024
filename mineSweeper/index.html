@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper</title>
+    <style>
+        #board {
+            display: grid;
+            grid-template-columns: repeat(10, 40px); /* 셀 크기 확대 */
+            grid-template-rows: repeat(10, 40px);
+            gap: 1px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+            background-color: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px; /* 아이콘 크기 조절 */
+            cursor: pointer;
+            border-radius: 5px; /* 모서리 둥글게 */
+        }
+
+        .cell.clicked {
+            background-color: #006eff;
+            color: white; /* 클릭한 셀의 텍스트 색상 변경 */
+        }
+
+        .cell.mine {
+            background-color: red;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .cell.number {
+            background-color: #19d800;
+            color: #333; /* 숫자 셀의 텍스트 색상 */
+        }
+
+        .cell.flagged {
+            background-color: #fbff10;
+            font-size: 28px; /* 깃발 크기 확대 */
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 80vh;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">지뢰찾기</div>
+        <div id="board"></div>
+    </div>
+
+    <script>
+        // 게임보드 크기와 지뢰 개수 설정
+        const rows = 10;
+        const cols = 10;
+        const mineCount = 10;
+
+        let boardArray = [];
+        let minePositions = [];
+
+        // 빈 보드 생성
+        for (let i = 0; i < rows; i++) {
+            boardArray[i] = [];
+            for (let j = 0; j < cols; j++) {
+                boardArray[i][j] = 0;
+            }
+        }
+
+        // 랜덤으로 지뢰 배치
+        while (minePositions.length < mineCount) {
+            let x = Math.floor(Math.random() * rows);
+            let y = Math.floor(Math.random() * cols);
+            if (!minePositions.some(pos => pos[0] === x && pos[1] === y)) {
+                minePositions.push([x, y]);
+                boardArray[x][y] = "M";  // 지뢰는 "M"으로 표시
+            }
+        }
+
+        // 주변 지뢰 개수 계산
+        const directions = [
+            [-1, -1], [-1, 0], [-1, 1],
+            [0, -1],          [0, 1],
+            [1, -1], [1, 0], [1, 1]
+        ];
+
+        for (let [x, y] of minePositions) {
+            for (let [dx, dy] of directions) {
+                let nx = x + dx;
+                let ny = y + dy;
+                if (nx >= 0 && nx < rows && ny >= 0 && ny < cols && boardArray[nx][ny] !== "M") {
+                    boardArray[nx][ny]++;
+                }
+            }
+        }
+
+        // HTML 보드 생성
+        let board = document.getElementById("board");
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                let cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.setAttribute('data-value', boardArray[i][j]);
+                board.appendChild(cell);
+            }
+        }
+
+        // 클릭 이벤트 설정
+        let cells = document.querySelectorAll('.cell');
+        cells.forEach(cell => {
+            // 좌클릭: 셀 오픈
+            cell.addEventListener('click', function() {
+                let value = cell.getAttribute('data-value');
+                if (value === "M") {
+                    cell.classList.add('mine');
+                    cell.innerHTML = 'X';  // 지뢰 표시
+                } else {
+                    cell.classList.add('number');
+                    cell.innerHTML = value;  // 주변 지뢰 개수 표시
+                }
+                cell.classList.add('clicked');
+            });
+
+            // 우클릭: 깃발 꽂기
+            cell.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                if (!cell.classList.contains('clicked')) {
+                    if (!cell.classList.contains('flagged')) {
+                        cell.classList.add('flagged');
+                        cell.innerHTML = '🚩';  // 깃발 표시
+                    } else {
+                        cell.classList.remove('flagged');
+                        cell.innerHTML = '';  // 깃발 제거
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
